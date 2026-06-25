@@ -10,7 +10,10 @@ from selenium.common.exceptions import TimeoutException, NoSuchElementException
 
 from utils.logger import get_logger
 
-SCREENSHOT_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "screenshots")
+SCREENSHOT_DIR = os.environ.get(
+    "SCREENSHOT_DIR",
+    os.path.join(os.path.dirname(os.path.dirname(__file__)), "screenshots"),
+)
 
 
 class BasePage:

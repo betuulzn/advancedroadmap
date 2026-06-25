@@ -18,6 +18,12 @@ def pytest_addoption(parser):
         default="chrome",
         help="Browser to run tests on: chrome | firefox",
     )
+    parser.addoption(
+        "--headless",
+        action="store_true",
+        default=False,
+        help="Run the browser in headless mode (used on CI agents without a display)",
+    )
 
 
 @pytest.fixture(scope="session")
@@ -26,9 +32,10 @@ def browser(request):
 
 
 @pytest.fixture(scope="session")
-def driver(browser):
-    log.info(f"FIXTURE | Starting '{browser}' driver (session-scoped, single browser)")
-    drv = DriverFactory.get_driver(browser)
+def driver(browser, request):
+    headless = request.config.getoption("--headless")
+    log.info(f"FIXTURE | Starting '{browser}' driver (headless={headless}, session-scoped, single browser)")
+    drv = DriverFactory.get_driver(browser, headless=headless)
     drv.implicitly_wait(0)
     yield drv
     log.info("FIXTURE | Quitting driver")

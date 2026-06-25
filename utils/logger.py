@@ -4,7 +4,10 @@ import threading
 from datetime import datetime
 from typing import Optional
 
-LOG_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "logs")
+LOG_DIR = os.environ.get(
+    "LOG_DIR",
+    os.path.join(os.path.dirname(os.path.dirname(__file__)), "logs"),
+)
 
 
 def get_logger(name: str) -> logging.Logger:

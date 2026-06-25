@@ -23,13 +23,20 @@ def _resolve_driver_path(raw_path: str) -> str:
 
 class DriverFactory:
     @staticmethod
-    def get_driver(browser: str) -> webdriver.Remote:
+    def get_driver(browser: str, headless: bool = False) -> webdriver.Remote:
         browser = browser.lower()
         if browser == "chrome":
             options = webdriver.ChromeOptions()
             options.add_argument("--start-maximized")
             options.add_argument("--disable-notifications")
             options.add_argument("--disable-popup-blocking")
+            if headless:
+                # Headless Chrome on CI agents needs these to avoid sandbox/shm crashes
+                options.add_argument("--headless=new")
+                options.add_argument("--no-sandbox")
+                options.add_argument("--disable-dev-shm-usage")
+                options.add_argument("--disable-gpu")
+                options.add_argument("--window-size=1920,1080")
             driver_path = _resolve_driver_path(ChromeDriverManager().install())
             service = ChromeService(driver_path)
             return webdriver.Chrome(service=service, options=options)
@@ -37,6 +44,8 @@ class DriverFactory:
             options = webdriver.FirefoxOptions()
             options.add_argument("--width=1920")
             options.add_argument("--height=1080")
+            if headless:
+                options.add_argument("-headless")
             driver_path = _resolve_driver_path(GeckoDriverManager().install())
             service = FirefoxService(driver_path)
             return webdriver.Firefox(service=service, options=options)
