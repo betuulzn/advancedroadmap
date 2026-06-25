@@ -1,6 +1,7 @@
 import pytest
 from utils.driver_factory import DriverFactory
 from utils.logger import get_logger
+from utils.database import log_test_result
 from pages.base_page import SCREENSHOT_DIR
 import os
 
@@ -54,3 +55,14 @@ def pytest_runtest_makereport(item, call):
             from pages.base_page import BasePage
             path = BasePage(drv).take_screenshot(item.name)
             log.error(f"TEST FAILED → screenshot: {path}")
+
+    if report.when == "call":
+        try:
+            log_test_result(
+                test_name=item.name,
+                browser=item.config.getoption("--browser"),
+                status="PASS" if report.passed else "FAIL",
+                duration=report.duration,
+            )
+        except Exception as db_exc:
+            log.error(f"DB LOGGING FAILED | {db_exc}")
