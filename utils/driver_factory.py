@@ -1,9 +1,7 @@
 import os
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
-from selenium.webdriver.firefox.service import Service as FirefoxService
 from webdriver_manager.chrome import ChromeDriverManager
-from webdriver_manager.firefox import GeckoDriverManager
 
 
 def _resolve_driver_path(raw_path: str) -> str:
@@ -46,8 +44,10 @@ class DriverFactory:
             options.add_argument("--height=1080")
             if headless:
                 options.add_argument("-headless")
-            driver_path = _resolve_driver_path(GeckoDriverManager().install())
-            service = FirefoxService(driver_path)
-            return webdriver.Firefox(service=service, options=options)
+            # Selenium Manager (bundled with Selenium 4.6+) resolves geckodriver
+            # from its own cache/CDN instead of webdriver-manager's GitHub API call,
+            # which is rate-limited to 60 unauthenticated requests/hour and was
+            # failing the CI matrix's firefox axis with HTTP 403.
+            return webdriver.Firefox(options=options)
         else:
             raise ValueError(f"Unsupported browser: '{browser}'. Use 'chrome' or 'firefox'.")
