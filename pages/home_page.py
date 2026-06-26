@@ -8,7 +8,6 @@ class HomePage(BasePage):
     _FOOTER_WE_ARE_HIRING = (By.XPATH, "//a[contains(translate(normalize-space(),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),\"we're hiring\")]")
 
     # ------------------------------------------------------------------ #
-    # Actions
     # ------------------------------------------------------------------ #
     def load(self):
         self.log.info("STEP | Opening Insider homepage")
