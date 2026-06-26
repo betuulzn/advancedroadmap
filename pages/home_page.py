@@ -5,7 +5,7 @@ from pages.base_page import BasePage
 class HomePage(BasePage):
     URL = "https://insiderone.com/"
 
-    _FOOTER_WE_ARE_HIRING = (By.XPATH, "//a[contains(translate(normalize-space(),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),\"we're hiring\")]")
+    _FOOTER_WE_ARE_HIRING = (By.XPATH, "//a[contains(translate(normalize-space(),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),\"test\")]")
 
     # ------------------------------------------------------------------ #
     # Actions
